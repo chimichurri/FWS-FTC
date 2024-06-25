@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Free Time Value Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        input, button { margin: 5px 0; padding: 5px; }
+        #result { margin-top: 20px; font-weight: bold; }
+        .expense-category { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Detailed Free Time Value Calculator</h1>
+        <p>Calculate the value of your free time and analyze your expenses in detail.</p>
+        
+        <h2>Income</h2>
+        <label for="monthlyIncome">Monthly Income ($):</label>
+        <input type="number" id="monthlyIncome" required><br>
+        
+        <h2>Work Hours</h2>
+        <label for="workHours">Weekly Work Hours:</label>
+        <input type="number" id="workHours" required><br>
+        
+        <h2>Expenses</h2>
+        <div class="expense-category">
+            <h3>Necessities</h3>
+            <label for="rent">Rent/Mortgage ($):</label>
+            <input type="number" id="rent" required><br>
+            <label for="utilities">Utilities ($):</label>
+            <input type="number" id="utilities" required><br>
+            <label for="groceries">Groceries ($):</label>
+            <input type="number" id="groceries" required><br>
+            <label for="healthcare">Healthcare ($):</label>
+            <input type="number" id="healthcare" required><br>
+        </div>
+        
+        <div class="expense-category">
+            <h3>Transportation</h3>
+            <label for="carPayment">Car Payment ($):</label>
+            <input type="number" id="carPayment" required><br>
+            <label for="fuel">Fuel ($):</label>
+            <input type="number" id="fuel" required><br>
+            <label for="publicTransport">Public Transportation ($):</label>
+            <input type="number" id="publicTransport" required><br>
+        </div>
+        
+        <div class="expense-category">
+            <h3>Personal</h3>
+            <label for="clothing">Clothing ($):</label>
+            <input type="number" id="clothing" required><br>
+            <label for="entertainment">Entertainment ($):</label>
+            <input type="number" id="entertainment" required><br>
+            <label for="subscriptions">Subscriptions ($):</label>
+            <input type="number" id="subscriptions" required><br>
+        </div>
+        
+        <div class="expense-category">
+            <h3>Savings and Debt</h3>
+            <label for="savings">Savings ($):</label>
+            <input type="number" id="savings" required><br>
+            <label for="debtPayments">Debt Payments ($):</label>
+            <input type="number" id="debtPayments" required><br>
+        </div>
+        
+        <button onclick="calculateDetailedFreeTimeValue()">Calculate</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateDetailedFreeTimeValue() {
+            const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
+            const workHours = parseFloat(document.getElementById('workHours').value);
+            
+            const expenses = {
+                necessities: {
+                    rent: parseFloat(document.getElementById('rent').value),
+                    utilities: parseFloat(document.getElementById('utilities').value),
+                    groceries: parseFloat(document.getElementById('groceries').value),
+                    healthcare: parseFloat(document.getElementById('healthcare').value)
+                },
+                transportation: {
+                    carPayment: parseFloat(document.getElementById('carPayment').value),
+                    fuel: parseFloat(document.getElementById('fuel').value),
+                    publicTransport: parseFloat(document.getElementById('publicTransport').value)
+                },
+                personal: {
+                    clothing: parseFloat(document.getElementById('clothing').value),
+                    entertainment: parseFloat(document.getElementById('entertainment').value),
+                    subscriptions: parseFloat(document.getElementById('subscriptions').value)
+                },
+                savingsAndDebt: {
+                    savings: parseFloat(document.getElementById('savings').value),
+                    debtPayments: parseFloat(document.getElementById('debtPayments').value)
+                }
+            };
+            
+            const totalExpenses = Object.values(expenses).reduce((total, category) => 
+                total + Object.values(category).reduce((sum, value) => sum + value, 0), 0);
+            
+            const weeklyIncome = monthlyIncome * 12 / 52;
+            const hourlyRate = weeklyIncome / workHours;
+            const freeHours = 168 - workHours; // 168 hours in a week
+            const freeTimeValue = freeHours * hourlyRate;
+            const discretionaryIncome = monthlyIncome - totalExpenses;
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>Results</h2>
+                <p>Your free time is worth approximately $${freeTimeValue.toFixed(2)} per week.</p>
+                <p>Your total monthly expenses are $${totalExpenses.toFixed(2)}.</p>
+                <p>Your discretionary income is $${discretionaryIncome.toFixed(2)} per month.</p>
+                
+                <h3>Expense Breakdown:</h3>
+                <ul>
+                    <li>Necessities: $${sumCategory(expenses.necessities).toFixed(2)}</li>
+                    <li>Transportation: $${sumCategory(expenses.transportation).toFixed(2)}</li>
+                    <li>Personal: $${sumCategory(expenses.personal).toFixed(2)}</li>
+                    <li>Savings and Debt: $${sumCategory(expenses.savingsAndDebt).toFixed(2)}</li>
+                </ul>
+                
+                <p>When considering time-saving purchases or activities, compare their cost to the value of your free time.</p>
+                <p>For luxuries, consider if their cost is worth the equivalent amount of your free time.</p>
+            `;
+        }
+
+        function sumCategory(category) {
+            return Object.values(category).reduce((sum, value) => sum + value, 0);
+        }
+    </script>
+</body>
+</html>
